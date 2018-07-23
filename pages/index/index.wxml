@@ -1,0 +1,24 @@
+<!--index.wxml-->
+<view class="msc_left">
+      <image src="../img/music.png" class="{{imageRotate}}" bindtap='onmusicTap' mode="scaleToFill"></image>
+</view>
+<view class="container bottle">
+    <view class="doommview">
+        <block wx:for="{{doommData}}" wx:key="id">
+            <text wx:if="{{item.display}}" class="aon" style="animation: first {{item.time}}s linear forwards;top:{{item.top}}%;color:{{item.color}};">
+                {{item.text}}
+            </text>
+        </block>
+    </view>
+
+    <view class="inputView">
+        <block>
+            <input type='text' value="6546664"/>
+        </block>
+    </view> 
+</view>
+
+
+
+
+

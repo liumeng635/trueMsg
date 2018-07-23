@@ -1,0 +1,13 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/logs/logs"
+  ],
+  "window":{
+    "backgroundTextStyle":"dark",
+    "navigationBarBackgroundColor": "#383A42",
+    "navigationBarTitleText": "真心话大冒险",
+    "navigationBarTextStyle":"light",
+    "backgroundColor":"#383A42"
+  }
+}
