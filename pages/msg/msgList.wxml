@@ -1,0 +1,12 @@
+<!--pages/msg/msgList.wxml-->
+<view class="container bottle-1" catchtouchmove='catchTouchMove'>
+  <view class='ul lstCont'>
+    <text class='li'>你好帅哦哦哦哦哦哦</text>
+    <text class='li'>你好帅哦哦哦哦哦哦</text>
+    <text class='li'>你好帅哦哦哦哦哦哦</text>
+    <text class='li'>你好帅哦哦哦哦哦哦</text>
+    <text class='li'>你好帅哦哦哦哦哦哦</text>
+    <text class='li'>你好帅哦哦哦哦哦哦</text>
+    <text class='li'>你好帅哦哦哦哦哦哦</text>
+  </view>
+</view>

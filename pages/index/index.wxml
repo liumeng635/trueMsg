@@ -2,6 +2,9 @@
 <view class="msc_left">
       <image src="../img/music.png" class="{{imageRotate}}" bindtap='onmusicTap' mode="scaleToFill"></image>
 </view>
+<view class="msc_right">
+      <button class="shareBtn" open-type="share" type="primary">分享</button>
+</view>
 <view class="container bottle" catchtouchmove='catchTouchMove'>
 <view class="userinfo">
     <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
@@ -20,12 +23,19 @@
 
     <view class="inputView">
         <block>
-            <input type='text' value="6546664"/>
+            <input placeholder-class="phcolor" class="txtInput" type='text' value="" placeholder='#说说你最想对他说的悄悄话#'/>
+            <button class='subBtn'>确定</button>
         </block>
-    </view> 
+        <block>
+            <text class='tagTxt'>你真的好帅啊</text>
+            <text class='tagTxt'>你真的好漂亮啊</text>
+            <text class='tagTxt'>我好喜欢你啊</text>
+            <text class='tagTxt'>你是个大傻逼哈哈哈哈哈哈</text>
+        </block>
+        <block>
+            <button bindtap="toMsgList" class='mgrBtn'>留言管理</button>
+        </block>
+    </view>
 </view>
-
-
-
 
 

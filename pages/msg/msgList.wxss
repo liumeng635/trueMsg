@@ -1,0 +1,31 @@
+/* pages/msg/msgList.wxss */
+.container{
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;/*垂直居中*/
+  justify-content: center;/*水平居中*/
+}
+
+.ul .li{
+  display: block;
+  background-color: #FFFFCC;
+  border-radius: 5px;
+  margin-top:10px;
+  font-size:15px;
+  padding: 5px 5px 5px 5px;
+}
+
+.ul{
+  position: fixed;
+  height:100%;
+  width:90%;
+}
+
+.lstCont{
+  top: 10px;
+  left: 5%;
+  color: #000099;
+}

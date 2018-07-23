@@ -20,7 +20,8 @@
     onLoad: function () {
       page = this;
       wx.playBackgroundAudio({
-        dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
+        // dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
+        dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
       });
       if (app.globalData.userInfo) {
         this.setData({
@@ -54,7 +55,7 @@
         doommList.push(new Doomm("我好喜欢你哦", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
         doommList.push(new Doomm("你真帅啊", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
         doommList.push(new Doomm("你好漂亮", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
-        this.setData({
+        page.setData({
           doommData: doommList
         })
       },1000);
@@ -76,7 +77,7 @@
         });
       } else {
         wx.playBackgroundAudio({
-          dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
+          dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
               });
         this.setData({
           isPlayingMusic: true,
@@ -86,7 +87,12 @@
     },
     catchTouchMove:function(){
       return false;
-    }
+    },
+    toMsgList: function () {
+      wx.navigateTo({
+        url: '../msg/msgList'
+      })
+    },
   })
   var doommList = [];
   var i = 0;//用做唯一的wx:key
