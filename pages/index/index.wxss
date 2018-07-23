@@ -5,7 +5,7 @@
   align-items: center;
 }
 .container{
-  height: 610px;
+  /**height: 610px;**/
   overflow:hidden;
 }
 .userinfo-avatar {
@@ -57,6 +57,7 @@
   width: 100%;
 }
 .aon{
+  z-index: 19890909;
 position: absolute;
 white-space:nowrap;/* 防止向下换行*/
 display: block;
