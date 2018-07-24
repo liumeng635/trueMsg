@@ -28,16 +28,17 @@
             <button class='subBtn'  bindtap='showWhisper'>发送</button>
             <!-- <button  wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权登录</button> -->
         </block>
-        <block>
-            <text class='tagTxt' data-text="你真的好帅啊" bindtap='bindtapFunc'>你真的好帅啊</text>
-            <text class='tagTxt' data-text="你真的好漂亮啊" bindtap='bindtapFunc'>你真的好漂亮啊</text>
-            <text class='tagTxt' data-text="我好喜欢你啊" bindtap='bindtapFunc'>我好喜欢你啊</text>
-            <text class='tagTxt' data-text="你是个大傻逼哈哈哈哈哈哈" bindtap='bindtapFunc'>你是个大傻逼哈哈哈哈哈哈</text>
-        </block>
-        <block>
-            <button bindtap="toMsgList" class='mgrBtn'>管理我的心里话</button>
-        </block>
     </view>
+
+
+    <view class="inputView1">
+      <block wx:for="{{tagTxts}}" wx:key="id">
+            <text class='tagTxt' data-text="{{item}}" bindtap='bindtapFunc'>{{item}}</text>
+        </block>
+        <button class="change" bindtap='changeTagTxt'>换一批</button>
+    </view>
+
+            <button bindtap="toMsgList" class='mgrBtn'>管理我的心里话</button>
 </view>
 
 

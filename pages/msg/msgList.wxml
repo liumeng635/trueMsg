@@ -1,12 +1,11 @@
 <!--pages/msg/msgList.wxml-->
 <view class="container bottle-1" catchtouchmove='catchTouchMove'>
+  <view class='navTab'>
+        <button class="{{_num == 1?'inTab':''}}" data-num = "1" bindtap='showMsgList'>全部</button>
+        <button class="{{_num == 2?'inTab':''}}" data-num = "2" bindtap='showMsgList'>标记</button>
+        <button class="{{_num == 3?'inTab':''}}" data-num = "3" bindtap='showMsgList'>查看</button>
+  </view>
   <view class='ul lstCont'>
-    <text class='li'>你好帅哦哦哦哦哦哦</text>
-    <text class='li'>你好帅哦哦哦哦哦哦</text>
-    <text class='li'>你好帅哦哦哦哦哦哦</text>
-    <text class='li'>你好帅哦哦哦哦哦哦</text>
-    <text class='li'>你好帅哦哦哦哦哦哦</text>
-    <text class='li'>你好帅哦哦哦哦哦哦</text>
-    <text class='li'>你好帅哦哦哦哦哦哦</text>
+
   </view>
 </view>

@@ -29,3 +29,43 @@
   left: 5%;
   color: #000099;
 }
+
+.navTab{
+  background: none;
+  position:absolute;
+  top:15px;
+}
+
+button::after{
+  border:none;
+}
+
+.navTab button{
+  display:inline-block;
+  height:30px;
+  line-height:30px;
+  font-size:16px;
+  width:90px;
+  border-radius:0;
+  z-index:19999999;
+}
+
+.navTab button:not(:first-child){
+  border-top:1px solid #009688;
+  border-right:1px solid #009688;
+  border-bottom:1px solid #009688;
+}
+
+.navTab button:hover,.navTab button:focus,.navTab button:active{
+  background-color:#009666;
+  color: #FFF;
+}
+
+.navTab button:first-child{
+  border:1px solid #009688;
+}
+
+.inTab{
+  background-color:#009666;
+  color: #FFF;
+}

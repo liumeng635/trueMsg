@@ -5,7 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-  
+    _num:1
   },
 
   /**
@@ -62,5 +62,10 @@ Page({
    */
   onShareAppMessage: function () {
   
+  },
+  showMsgList:function(e){
+    this.setData({
+      _num: e.target.dataset.num
+    })
   }
 })

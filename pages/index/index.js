@@ -1,7 +1,9 @@
   //index.js
   //获取应用实例
   const app = getApp();
+  var fileData = require('../../utils/data.js')
   var page;
+  var tagIndex = 0;
   Page({
     data: {
       userInfo: {},
@@ -11,7 +13,8 @@
       isSelfPause:'',//是否认为停止播放
       imageRotate:'image-rotate',
       doommData: [],
-      whisper:''
+      whisper:'',
+      tagTxts:[]
     },
     //事件处理函数
     bindViewTap: function() {
@@ -48,6 +51,10 @@
         })
       }, 500);
 
+      //加载默认标签文字
+      this.setData({
+        tagTxts: fileData.tagData(tagIndex)
+      });
       if (app.globalData.userInfo) {
         this.setData({
           userInfo: app.globalData.userInfo,
@@ -74,16 +81,6 @@
           }
         })
       }
-      //加载弹幕
-      // setInterval(function(){
-      //   doommList.push(new Doomm("你是我的小苹果", Math.ceil(Math.random() * 100-20), Math.ceil(Math.random() * 10), getRandomColor()));
-      //   doommList.push(new Doomm("我好喜欢你哦", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
-      //   doommList.push(new Doomm("你真帅啊", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
-      //   doommList.push(new Doomm("你好漂亮", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
-      //   page.setData({
-      //     doommData: doommList
-      //   })
-      // },1000);
     },
     getUserInfo: function(e) {
       console.log(e)
@@ -126,8 +123,10 @@
       });
     },
     showWhisper:function(e){//点击确定
-      console.log(this.data.whisper);
-      doommList.push(new Doomm(this.data.whisper, Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
+      var whis = this.data.whisper;
+      if (whis != ''){
+        doommList.push(new Doomm(whis, Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
+      }
       page.setData({
           doommData: doommList
       })
@@ -148,6 +147,15 @@
       wx.navigateTo({
         url: '../share/sharePage'
       })
+    },
+    changeTagTxt:function(){
+      tagIndex++;
+      if (tagIndex > 2){
+        tagIndex = 0;
+      }
+      this.setData({
+        tagTxts: fileData.tagData(tagIndex)
+      });
     }
   })
 
