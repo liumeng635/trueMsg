@@ -56,20 +56,20 @@
 
 .txtInput{
   width: 75%;
-  border-bottom:2px solid #00FF00;
-  color: #00FF66;
+  border-bottom:1px solid #BBBBBB;
+  color: #939595;
   font-size:15px;
   float: left;
 }
 
 .phcolor{
-  color: #00FF66;
+  color: #939595;
 }
 
 .subBtn{
   height:30px;
   line-height:30px;
-  background-color:#00CC66;
+  background-color:#009688;
   color:#FFF;
   width:24%;
   font-size:16px;
@@ -90,38 +90,50 @@
 }
 .tagTxt{
   display:inline-block;
-  font-size:15px;
+  font-size:14px;
   clear:both;
   padding-left:3px;
   padding-right:3px;
-  color:#33FF33;
-  border:2px #33FF00 dotted;
+  color:#9FA8B9;
+  border:1px #8E99B1 dotted;
   border-radius:4px;
   margin-top: 6px;
   margin-left: 4px;
 }
+.tagTxt:hover,.tagTxt:active,.tagTxt:focus{
+  /* background-color: #660033; */
+  color:#00CC99;
+}
+.userinfo-avatar{
+  width:180rpx;
+  height:180rpx;
+  margin:20rpx;
 
+}
 .mgrBtn{
   background:none;
   font-size:16px;
-  border:1px solid yellow;
-  color:#33FF66;
+  border:1px solid #00FF66;
+  color:#00FFCC;
   position:fixed;
   bottom:10px;
-  width: 90%;
+  width:70%;
+  margin-left:10%;
+  height:35px;
+  line-height:32px;
 }
-
 .shareBtn{
   position:fixed;
   font-size:15px;
   height:32px;
   width:60px;
   left:82%;
-  top:8px;
+  top:12px;
   border-radius:30px;
   line-height:32px;
-  background-color: #66CC66;
+  background-color: #009688;
   color: #FFF;
+  z-index:19909909;
 }
 
 /**定义从右边向左边的移动的动画**/

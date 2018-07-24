@@ -7,9 +7,11 @@
       userInfo: {},
       hasUserInfo: false,
       canIUse: wx.canIUse('button.open-type.getUserInfo'),
-      isPlayingMusic:'',
+      isPlayingMusic:'',//是否正在播放音乐
+      isSelfPause:'',//是否认为停止播放
       imageRotate:'image-rotate',
-      doommData: []
+      doommData: [],
+      whisper:''
     },
     //事件处理函数
     bindViewTap: function() {
@@ -17,12 +19,35 @@
         url: '../logs/logs'
       })
     },
-    onLoad: function () {
+    onLoad: function (options) {
       page = this;
-      wx.playBackgroundAudio({
+      wx.playBackgroundAudio({//播放背景音乐
         // dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
         dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
       });
+
+      //查看是否授权
+      wx.getSetting({
+        success:function(res){
+            if(res.authSetting['scope.userInfo']){
+              wx.getUserInfo({
+                success:function(res){
+                    console.log(res.userInfo);//用户已经授权过
+                }
+              })
+            }
+        }
+      })    
+
+      setInterval(function () {//监听音乐循环播放
+        wx.onBackgroundAudioStop(function(){
+          wx.playBackgroundAudio({
+            // dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
+            dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
+          });
+        })
+      }, 500);
+
       if (app.globalData.userInfo) {
         this.setData({
           userInfo: app.globalData.userInfo,
@@ -50,15 +75,15 @@
         })
       }
       //加载弹幕
-      setInterval(function(){
-        doommList.push(new Doomm("你是我的小苹果", Math.ceil(Math.random() * 100-20), Math.ceil(Math.random() * 10), getRandomColor()));
-        doommList.push(new Doomm("我好喜欢你哦", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
-        doommList.push(new Doomm("你真帅啊", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
-        doommList.push(new Doomm("你好漂亮", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
-        page.setData({
-          doommData: doommList
-        })
-      },1000);
+      // setInterval(function(){
+      //   doommList.push(new Doomm("你是我的小苹果", Math.ceil(Math.random() * 100-20), Math.ceil(Math.random() * 10), getRandomColor()));
+      //   doommList.push(new Doomm("我好喜欢你哦", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
+      //   doommList.push(new Doomm("你真帅啊", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
+      //   doommList.push(new Doomm("你好漂亮", Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
+      //   page.setData({
+      //     doommData: doommList
+      //   })
+      // },1000);
     },
     getUserInfo: function(e) {
       console.log(e)
@@ -73,14 +98,16 @@
         wx.pauseBackgroundAudio();
         this.setData({
           isPlayingMusic: false,
+          isSelfPause:true,
           imageRotate:'image-rotate-none'
         });
       } else {
         wx.playBackgroundAudio({
           dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
-              });
+        });
         this.setData({
           isPlayingMusic: true,
+          isSelfPause:false,
           imageRotate: 'image-rotate'
         });
       }
@@ -93,12 +120,46 @@
         url: '../msg/msgList'
       })
     },
+    bindtapFunc:function(e){//标签点击
+      this.setData({
+        whisper: e.currentTarget.dataset.text
+      });
+    },
+    showWhisper:function(e){//点击确定
+      console.log(this.data.whisper);
+      doommList.push(new Doomm(this.data.whisper, Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
+      page.setData({
+          doommData: doommList
+      })
+    },
+    whisperInput:function(e){//监听留言输入
+      this.setData({
+        whisper: e.detail.value
+      });
+    },
+    bindGetUserInfo:function(e){
+        if(e.detail.userInfo){
+          console.log("用户允许授权按钮");
+        }else{
+          console.log("用户取消授权按钮");
+        }
+    },
+    toShare:function(){
+      wx.navigateTo({
+        url: '../share/sharePage'
+      })
+    }
   })
+
+
   var doommList = [];
   var i = 0;//用做唯一的wx:key
   class Doomm {
     constructor(text, top, time, color) {
-      this.text = text + i;
+      if (time<5){
+        time = 5;
+      }
+      this.text = text;
       this.top = top;
       this.time = time;
       this.color = color;

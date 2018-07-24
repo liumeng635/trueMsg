@@ -1,0 +1,12 @@
+/* pages/share/sharePage.wxss */
+.shareQrCode{
+  width: 350px;
+  height: 350px;
+}
+
+.share_btn{
+position:absolute;
+bottom:10px;
+width:70%;
+margin-left:-35%;
+}
