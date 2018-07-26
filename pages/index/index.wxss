@@ -63,7 +63,7 @@ page{
   border-bottom:1px solid #BBBBBB;
   color: #939595;
   font-size:15px;
-  float: left;
+  display:inline-block;
 }
 
 .phcolor{
@@ -75,10 +75,10 @@ page{
   line-height:30px;
   background-color:#009688;
   color:#FFF;
-  width:24%;
+  width:23%;
   font-size:16px;
   border-radius: 6px;
-  float: right;
+  display:inline-block;
 }
 .doommview{
   z-index: 3;

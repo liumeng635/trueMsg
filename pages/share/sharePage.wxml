@@ -1,11 +1,8 @@
 <!--pages/share/sharePage.wxml-->
 <view class="container" style='padding:90rpx 0;' catchtouchmove='catchTouchMove'>
-    <view class='shareView'>
-        <image class='shareQrCode' src='../img/mini.png'/>
-    </view>
     <view>
-      <button class="share_btn" style='bottom:70px;' open-type="share" type='primary'>分享</button>
-      <button class="share_btn" bindtap='saveShareQrcode' type='primary'>复制二维码分享朋友圈</button>
+      <button class="share_btn" bindtap='saveShareQrcode' style='bottom:100px;width:40%;margin-left:-20%;' type="primary">保存海报分享朋友圈</button>
+      <button class="share_btn share1"  open-type="share">邀请好友评价</button>
     </view>
     
 </view>

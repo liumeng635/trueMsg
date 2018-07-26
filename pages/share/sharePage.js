@@ -98,7 +98,7 @@ Page({
             scope: 'scope.writePhotosAlbum',
             success() {
               console.log("2-授权《保存图片》权限成功");
-              fileData.downloadImage("/pages/img/mini.png");
+              fileData.downloadImage("/pages/img/share.jpg");
             },
             fail() {
               // 用户拒绝了授权  
@@ -116,7 +116,7 @@ Page({
           })
         } else {
           console.log("1-已经授权《保存图片》权限");
-          fileData.downloadImage("/pages/img/mini.png")
+          fileData.downloadImage("/pages/img/share.jpg")
         }
       },
       fail(res) {
