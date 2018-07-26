@@ -26,7 +26,9 @@
       page = this;
       wx.playBackgroundAudio({//播放背景音乐
         // dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
-        dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
+        // dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
+        // dataUrl: 'http://sc1.111ttt.cn/2015/1/08/05/101052215331.mp3'
+        dataUrl: 'http://www.ytmp3.cn/down/34981.mp3'
       });
 
       //查看是否授权
@@ -46,7 +48,9 @@
         wx.onBackgroundAudioStop(function(){
           wx.playBackgroundAudio({
             // dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
-            dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
+            // dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
+            // dataUrl: 'http://sc1.111ttt.cn/2015/1/08/05/101052215331.mp3'
+            dataUrl: 'http://www.ytmp3.cn/down/34981.mp3'
           });
         })
       }, 500);
@@ -100,7 +104,9 @@
         });
       } else {
         wx.playBackgroundAudio({
-          dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
+          // dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
+          // dataUrl: 'http://sc1.111ttt.cn/2015/1/08/05/101052215331.mp3'
+          dataUrl: 'http://www.ytmp3.cn/down/34981.mp3'
         });
         this.setData({
           isPlayingMusic: true,

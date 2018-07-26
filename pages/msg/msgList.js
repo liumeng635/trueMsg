@@ -63,6 +63,9 @@ Page({
   onShareAppMessage: function () {
   
   },
+  catchTouchMove: function () {
+    return true;
+  },
   showMsgList:function(e){
     this.setData({
       _num: e.target.dataset.num
