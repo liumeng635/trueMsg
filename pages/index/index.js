@@ -7,6 +7,9 @@
   Page({
     data: {
       userInfo: {},
+      destInfo:{},
+      avatarUrl:"",
+      toUserId:"",
       hasUserInfo: false,
       canIUse: wx.canIUse('button.open-type.getUserInfo'),
       isPlayingMusic:'',//是否正在播放音乐
@@ -23,6 +26,52 @@
       })
     },
     onLoad: function (options) {
+      //获取userInfo
+      if (app.globalData.userInfo) {
+        this.setData({
+          userInfo: app.globalData.userInfo,
+          hasUserInfo: true,
+          avatarUrl: app.globalData.userInfo.avatarUrl
+        })
+      } else if (this.data.canIUse) {
+        // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+        // 所以此处加入 callback 以防止这种情况
+        app.userInfoReadyCallback = res => {
+          console.log(app.globalData.openid + "===========");
+          this.setData({
+            userInfo: res.userInfo,
+            hasUserInfo: true,
+            avatarUrl: app.globalData.userInfo.avatarUrl,
+          })
+        }
+      } else {
+        // 在没有 open-type=getUserInfo 版本的兼容处理
+        wx.getUserInfo({
+          success: res => {
+            app.globalData.userInfo = res.userInfo
+            this.setData({
+              userInfo: res.userInfo,
+              hasUserInfo: true,
+              avatarUrl: app.globalData.userInfo.avatarUrl
+            })
+          }
+        })
+      }
+
+      //先查询用户是否是新用户且是否授权--新用户新增用户记录 返回用户信息 并将倾述对象id默认为当前用户==to-do
+
+
+
+      //是否扫码进入
+      var scene = decodeURIComponent(options.scene);//sense参数
+      if (scene !== 'undefined') {//userInfo是对方
+        //查询倾述对象信息
+        var toUserId = options.query.toUserId;
+      }
+      
+      
+
+
       page = this;
       wx.playBackgroundAudio({//播放背景音乐
         // dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
@@ -59,32 +108,6 @@
       this.setData({
         tagTxts: fileData.tagData(tagIndex)
       });
-      if (app.globalData.userInfo) {
-        this.setData({
-          userInfo: app.globalData.userInfo,
-          hasUserInfo: true
-        })
-      } else if (this.data.canIUse){
-        // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-        // 所以此处加入 callback 以防止这种情况
-        app.userInfoReadyCallback = res => {
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      } else {
-        // 在没有 open-type=getUserInfo 版本的兼容处理
-        wx.getUserInfo({
-          success: res => {
-            app.globalData.userInfo = res.userInfo
-            this.setData({
-              userInfo: res.userInfo,
-              hasUserInfo: true
-            })
-          }
-        })
-      }
     },
     getUserInfo: function(e) {
       console.log(e)
@@ -162,10 +185,13 @@
       this.setData({
         tagTxts: fileData.tagData(tagIndex)
       });
+    },
+    bindGetUserInfo: function (e) {
+      console.log(e.detail.userInfo)
     }
   })
 
-
+  //===============弹幕
   var doommList = [];
   var i = 0;//用做唯一的wx:key
   class Doomm {

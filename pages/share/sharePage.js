@@ -1,5 +1,7 @@
 // pages/share/sharePage.js
-var fileData = require('../../utils/data.js')
+var fileData = require('../../utils/data.js');
+var fileUtil = require('../../utils/download.js')
+let qrCodeUrl = "http://192.168.31.129:8888/user/dowloadQrcode?scene=test&width=500";
 Page({
 
   /**
@@ -99,6 +101,23 @@ Page({
             success() {
               console.log("2-授权《保存图片》权限成功");
               fileData.downloadImage("/pages/img/share.jpg");
+              // fileUtil.downloadSaveFile({
+              //   url: qrCodeUrl,
+              //   success:function(res){
+              //       wx.showToast({
+              //         title: '已成功保存至相册',
+              //         icon: 'success',
+              //         duration: 2000
+              //       });
+              //   },
+              //   fail:function(e){
+              //     wx.showToast({
+              //       title: '保存至相册失败',
+              //       icon: 'fail',
+              //       duration: 2000
+              //     });
+              //   }
+              // })
             },
             fail() {
               // 用户拒绝了授权  
@@ -117,6 +136,23 @@ Page({
         } else {
           console.log("1-已经授权《保存图片》权限");
           fileData.downloadImage("/pages/img/share.jpg")
+          // fileUtil.downloadSaveFile({
+          //   url: qrCodeUrl,
+          //   success: function (res) {
+          //     wx.showToast({
+          //       title: '已成功保存至相册',
+          //       icon: 'success',
+          //       duration: 2000
+          //     });
+          //   },
+          //   fail: function (e) {
+          //     wx.showToast({
+          //       title: '保存至相册失败',
+          //       icon: 'fail',
+          //       duration: 2000
+          //     });
+          //   }
+          // })
         }
       },
       fail(res) {
