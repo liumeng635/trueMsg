@@ -4,12 +4,13 @@
   var fileData = require('../../utils/data.js')
   var page;
   var tagIndex = 0;
+  const context = app.globalData.context;
   Page({
     data: {
       userInfo: {},
-      destInfo:{},
       avatarUrl:"",
       toUserId:"",
+      toNickName:"",
       hasUserInfo: false,
       canIUse: wx.canIUse('button.open-type.getUserInfo'),
       isPlayingMusic:'',//是否正在播放音乐
@@ -25,7 +26,34 @@
         url: '../logs/logs'
       })
     },
+    
     onLoad: function (options) {
+      page = this;
+      //查看是否授权---未授权去授权
+      wx.getSetting({
+        success: function (res) {
+          if (res.authSetting['scope.userInfo']) {
+            wx.getUserInfo({
+              success: function (res) {
+                //console.log(res.userInfo);//用户已经授权过
+              }
+            })
+          } else {
+            wx.showModal({
+              title: '注意',
+              showCancel: false,
+              confirmText: '好去授权',
+              content: '为了您更好的体验,请先同意授权',
+              success: function (res) {
+                wx.navigateTo({
+                  url: '../userInfo/index'
+                });
+              }
+            })
+          }
+        }
+      })
+
       //获取userInfo
       if (app.globalData.userInfo) {
         this.setData({
@@ -33,65 +61,137 @@
           hasUserInfo: true,
           avatarUrl: app.globalData.userInfo.avatarUrl
         })
+        //先查询用户是否是新用户且是否授权--新用户新增用户记录 返回用户信息 并将倾述对象id默认为当前用户==to-do
+        //是否扫码进入=====扫码进入的二维码会带上以二维码对象的openid作为toUserId的参数
+        var scene = decodeURIComponent(options.scene);//sense参数
+        if (scene !== 'undefined') {//userInfo是对方
+          //查询倾述对象信息
+          var toUserId = options.query.toUserId;
+          page.setData({
+            toUserId: toUserId
+          })
+          wx.request({
+            //后台接口地址
+            url: context + 'user/getToUserInfo',
+            method: "POST",
+            data: {
+              toUserId: toUserId
+            },
+            header: {
+              'content-type': 'application/x-www-form-urlencoded'
+            },
+            success: function (res) {
+              page.setData({
+                avatarUrl: res.data.avatarUrl,
+                toNickName: res.data.data.nickName
+              })
+            }
+          })
+        } else {//倾述对象是自己
+          this.setData({
+            toUserId: app.globalData.userInfo.openid,
+            avatarUrl: app.globalData.userInfo.avatarUrl,
+            toNickName: app.globalData.userInfo.nickName
+          })
+        }
       } else if (this.data.canIUse) {
         // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
         // 所以此处加入 callback 以防止这种情况
         app.userInfoReadyCallback = res => {
-          console.log(app.globalData.openid + "===========");
           this.setData({
             userInfo: res.userInfo,
             hasUserInfo: true,
-            avatarUrl: app.globalData.userInfo.avatarUrl,
-          })
+          });
+
+          //先查询用户是否是新用户且是否授权--新用户新增用户记录 返回用户信息 并将倾述对象id默认为当前用户==to-do
+          //是否扫码进入=====扫码进入的二维码会带上以二维码对象的openid作为toUserId的参数
+          var scene = decodeURIComponent(options.scene);//sense参数
+          if(scene !== 'undefined') {//userInfo是对方
+            //查询倾述对象信息
+            var toUserId = "o_AQI0V9RzJQcr4GVeCo7I2Z1KqM";//options.query.toUserId;
+            page.setData({
+              toUserId: toUserId
+            })
+            wx.request({
+              //后台接口地址
+              url: context + 'user/getToUserInfo',
+              method: "POST",
+              data: {
+                toUserId:toUserId
+              },
+              header: {
+                'content-type': 'application/x-www-form-urlencoded'
+              },
+              success: function (res) {
+                page.setData({
+                  avatarUrl: res.data.data.avatarUrl,
+                  toNickName: res.data.data.nickName
+                })
+              }
+            })
+            
+          } else {//倾述对象是自己
+            page.setData({
+              toUserId: this.data.userInfo.openid,
+              avatarUrl: this.data.userInfo.avatarUrl,
+              toNickName: this.data.userInfo.nickName
+            })
+          }
+
         }
       } else {
         // 在没有 open-type=getUserInfo 版本的兼容处理
         wx.getUserInfo({
           success: res => {
             app.globalData.userInfo = res.userInfo
-            this.setData({
+            page.setData({
               userInfo: res.userInfo,
-              hasUserInfo: true,
-              avatarUrl: app.globalData.userInfo.avatarUrl
+              hasUserInfo: true
             })
+
+            //先查询用户是否是新用户且是否授权--新用户新增用户记录 返回用户信息 并将倾述对象id默认为当前用户==to-do
+            //是否扫码进入=====扫码进入的二维码会带上以二维码对象的openid作为toUserId的参数
+            var scene = decodeURIComponent(options.scene);//sense参数
+            if (scene !== 'undefined') {//userInfo是对方
+              //查询倾述对象信息
+              var toUserId = options.query.toUserId;
+              page.setData({
+                toUserId: toUserId
+              })
+              wx.request({
+                //后台接口地址
+                url: context + 'user/getToUserInfo',
+                method: "POST",
+                data: {
+                  toUserId: toUserId
+                },
+                header: {
+                  'content-type': 'application/x-www-form-urlencoded'
+                },
+                success: function (res) {
+                  page.setData({
+                    avatarUrl: res.data.data.avatarUrl,
+                    toNickName: res.data.data.nickName
+                  })
+                }
+              })
+            } else {//倾述对象是自己
+              page.setData({
+                toUserId: res.userInfo.openid,
+                avatarUrl: res.userInfo.avatarUrl,
+                toNickName: res.userInfo.nickName
+              })
+            }
           }
         })
       }
 
-      //先查询用户是否是新用户且是否授权--新用户新增用户记录 返回用户信息 并将倾述对象id默认为当前用户==to-do
-
-
-
-      //是否扫码进入
-      var scene = decodeURIComponent(options.scene);//sense参数
-      if (scene !== 'undefined') {//userInfo是对方
-        //查询倾述对象信息
-        var toUserId = options.query.toUserId;
-      }
-      
-      
-
-
-      page = this;
       wx.playBackgroundAudio({//播放背景音乐
         // dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
         // dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
         // dataUrl: 'http://sc1.111ttt.cn/2015/1/08/05/101052215331.mp3'
         dataUrl: 'http://www.ytmp3.cn/down/34981.mp3'
       });
-
-      //查看是否授权
-      wx.getSetting({
-        success:function(res){
-            if(res.authSetting['scope.userInfo']){
-              wx.getUserInfo({
-                success:function(res){
-                    console.log(res.userInfo);//用户已经授权过
-                }
-              })
-            }
-        }
-      })    
 
       setInterval(function () {//监听音乐循环播放
         wx.onBackgroundAudioStop(function(){
@@ -110,7 +210,6 @@
       });
     },
     getUserInfo: function(e) {
-      console.log(e)
       app.globalData.userInfo = e.detail.userInfo
       this.setData({
         userInfo: e.detail.userInfo,
@@ -155,6 +254,23 @@
       var whis = this.data.whisper;
       if (whis != ''){
         doommList.push(new Doomm(whis, Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
+        //添加倾述信息记录 
+        wx.request({
+          //后台接口地址
+          url: context + 'msg/recordWhisper',
+          method: "POST",
+          data: {
+            message: whis,
+            fromOpenId:this.data.userInfo.openid,
+            toOpenId: this.data.toUserId
+          },
+          header: {
+            'content-type': 'application/x-www-form-urlencoded'
+          },
+          success: function (res) {
+           
+          }
+        })
       }
       page.setData({
           doommData: doommList

@@ -4,194 +4,28 @@
         <button class="{{_num == 1?'inTab':''}}" data-num = "1" bindtap='showMsgList'>全部</button>
         <button class="{{_num == 2?'inTab':''}}" data-num = "2" bindtap='showMsgList'>标记</button>
         <button class="{{_num == 3?'inTab':''}}" data-num = "3" bindtap='showMsgList'>查看</button>
-        <text class="desc">共有4位还有对你说了心里话哟~</text>
+        <text class="desc">共有{{msgList.length}}位还有对你说了心里话哟~</text>
   </view>
 
-  <scroll-view scroll-y="false" class='ul lstCont'>
+  <scroll-view scroll-y="false" class='ul lstCont' wx:for="{{msgList}}" wx:key="id">
     <view class='li'>
       <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
+        <block wx:if="{{item.isView == 0 }}" class="inline">
+            <image class='avarHead' src='../img/head.png'/>
+        </block>
+        <block wx:else class="inline">
+            <image class='avarHead' src='{{item.fromAvatarUrl}}'/>
+        </block>
+        <text class="timeS">{{item.createTime}}</text>
       </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
+      <view class="inline" style='float:right;line-height:40px;'>
+        <text data-num="{{item.isLike}}" data-text="{{item.whisperId}}" bindtap='doLike'  class="iconfont {{item.isLike == 0 ? 'icon-buoumaotubiao15' : 'icon-buoumaotubiao16'}}"></text>
+        <text data-num="{{item.isView}}" data-text="{{item.whisperId}}" bindtap='doLook' class="iconfont {{item.isView == 0 ? 'icon-chakan':'icon-chakanyanjingshishifenxi2'}} "></text>
+        <text class="iconfont icon-shanchu" data-text="{{item.whisperId}}" bindtap='deleteWhisper'></text>    
+
       </view>
       <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-    <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-    <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-
-    <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-    <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-     <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-
-     <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-
-     <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-
-     <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-
-     <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-
-     <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
-      </view>
-    </view>
-
-
-     <view class='li'>
-      <view class="inline" style='float:left;'>
-        <image class='avarHead' src='../img/132.jpg'/>
-        <text class="timeS">2018.07.25 12:00:00</text>
-      </view>
-      <view class="inline" style='vertical-align:sub;float:right;padding-top:15px;'>
-        <text class="iconfont icon-jushoucanggift"></text>
-        <text class="iconfont icon-chakanyanjingshishifenxi2"></text>
-        <text class="iconfont icon-shanchu1"></text>    
-      </view>
-      <view class='iptView'>
-        <input class='borderIpt' type='text'/>
+        <input class='borderIpt' disabled='disabled' type='text' value="{{item.message}}"/>
       </view>
     </view>
   </scroll-view>

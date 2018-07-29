@@ -1,0 +1,4 @@
+<!--pages/userInfo/index.wxml-->
+<view class="container" style='padding:90rpx 0;' catchtouchmove='catchTouchMove'>
+<button  open-type="getUserInfo" bindgetuserinfo="bindgetuserinfo">点击授权</button>    
+</view>

@@ -1,7 +1,9 @@
 // pages/share/sharePage.js
+const app = getApp();
+const context = app.globalData.context;
 var fileData = require('../../utils/data.js');
 var fileUtil = require('../../utils/download.js')
-let qrCodeUrl = "http://192.168.31.129:8888/user/dowloadQrcode?scene=test&width=500";
+let qrCodeUrl = context+"user/dowloadQrcode?scene=test&width=500";
 Page({
 
   /**
@@ -15,7 +17,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+
   },
 
   /**

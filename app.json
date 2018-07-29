@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/msg/msgList",
     "pages/share/sharePage",
+    "pages/userInfo/index",
     "pages/logs/logs"
   ],
   "window":{

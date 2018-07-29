@@ -102,10 +102,12 @@ button::after{
 }
 
 .borderIpt{
-  width: 100%;
+  width: 98%;
   border-radius: 3px;
   border: 1px solid #666;
   height: 35px;
+  padding-left: 1%;
+  color: #000066;
 }
 
 .iptView{
