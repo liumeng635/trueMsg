@@ -10,7 +10,8 @@ Page({
   data: {
     _num:1,
     msgList:[],
-    type:0
+    type:0,
+    chatNum:0
   },
 
   /**
@@ -18,7 +19,12 @@ Page({
    */
   onLoad: function (options) {
     that = this;
-    queryMyWhisperList(app.globalData.userInfo.openid, this.data.type);
+    queryMyWhisperList(app.globalData.userInfo.openid, this.data.type,function(size){
+        that.setData({
+          chatNum: size
+        });
+    });
+
   },
 
   /**
@@ -157,7 +163,7 @@ Page({
 /**
  * 查看倾述留言列表
  */
-function queryMyWhisperList(toOpenid,type){
+function queryMyWhisperList(toOpenid,type,callback){
   wx.request({
     //后台接口地址
     url: context + 'msg/queryMyWhisperList',
@@ -173,6 +179,9 @@ function queryMyWhisperList(toOpenid,type){
       that.setData({
         msgList: res.data.data
       })
+      if (callback){
+        callback(res.data.data.length);
+      }
     }
   })
 }

@@ -51,6 +51,6 @@ App({
   globalData: {
     userInfo: null,
     openid: null,
-    context:'http://192.168.31.129:8888/'
+    context:'http://192.168.1.102:8888/'
   }
 })

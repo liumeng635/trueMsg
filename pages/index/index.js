@@ -56,6 +56,7 @@
 
       //获取userInfo
       if (app.globalData.userInfo) {
+        queryMyWhisperList(app.globalData.userInfo.openid);
         this.setData({
           userInfo: app.globalData.userInfo,
           hasUserInfo: true,
@@ -98,6 +99,7 @@
         // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
         // 所以此处加入 callback 以防止这种情况
         app.userInfoReadyCallback = res => {
+          queryMyWhisperList(res.userInfo.openid);
           this.setData({
             userInfo: res.userInfo,
             hasUserInfo: true,
@@ -108,7 +110,7 @@
           var scene = decodeURIComponent(options.scene);//sense参数
           if(scene !== 'undefined') {//userInfo是对方
             //查询倾述对象信息
-            var toUserId = "o_AQI0V9RzJQcr4GVeCo7I2Z1KqM";//options.query.toUserId;
+            var toUserId = options.query.toUserId;
             page.setData({
               toUserId: toUserId
             })
@@ -253,7 +255,6 @@
     showWhisper:function(e){//点击确定
       var whis = this.data.whisper;
       if (whis != ''){
-        doommList.push(new Doomm(whis, Math.ceil(Math.random() * 100 - 20), Math.ceil(Math.random() * 10), getRandomColor()));
         //添加倾述信息记录 
         wx.request({
           //后台接口地址
@@ -262,19 +263,17 @@
           data: {
             message: whis,
             fromOpenId:this.data.userInfo.openid,
-            toOpenId: this.data.toUserId
+            toOpenId: this.data.toUserId,
+            showTime: Math.ceil(Math.random() * 10)
           },
           header: {
             'content-type': 'application/x-www-form-urlencoded'
           },
           success: function (res) {
-           
+            queryMyWhisperList(app.globalData.userInfo.openid);
           }
         })
       }
-      page.setData({
-          doommData: doommList
-      })
     },
     whisperInput:function(e){//监听留言输入
       this.setData({
@@ -310,26 +309,26 @@
   //===============弹幕
   var doommList = [];
   var i = 0;//用做唯一的wx:key
-  class Doomm {
-    constructor(text, top, time, color) {
-      if (time<5){
-        time = 5;
-      }
-      this.text = text;
-      this.top = top;
-      this.time = time;
-      this.color = color;
-      this.display = true;
-      let that = this;
-      this.id = i++;
-      setTimeout(function () {
-        doommList.splice(doommList.indexOf(that), 1);//动画完成，从列表中移除这项
-        page.setData({
-          doommData: doommList
-        })
-      }, this.time * 1000)//定时器动画完成后执行。
+class Doomm {
+  constructor(text, top, time, color) {
+    if (time < 5) {
+      time = 5;
     }
+    this.text = text;
+    this.top = top;
+    this.time = time;
+    this.color = color;
+    this.display = true;
+    let that = this;
+    this.id = i++;
+    // setTimeout(function () {
+    //   //doommList.splice(doommList.indexOf(that), 1);//动画完成，从列表中移除这项
+    //   page.setData({
+    //     doommData: doommList
+    //   })
+    // }, this.time * 1000)//定时器动画完成后执行。
   }
+}
   function getRandomColor() {
     let rgb = []
     for (let i = 0; i < 3; ++i) {
@@ -339,3 +338,45 @@
     }
     return '#' + rgb.join('')
   }
+
+/**
+ * 查看倾述留言列表
+ */
+function queryMyWhisperList(toOpenid) {
+  wx.request({
+    //后台接口地址
+    url: context + 'msg/queryMyWhisperList',
+    method: "POST",
+    data: {
+      "toOpenId": toOpenid,
+      "type": 0
+    },
+    header: {
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    success: function (res) {
+      var msgList = res.data.data;
+      var sortTime = [];
+      for (var i in msgList) {
+          sortTime.push(msgList[i]['showTime']);
+          doommList.push(new Doomm(msgList[i]['message'], Math.ceil(Math.random() * 100 - 20),msgList[i]['showTime'], getRandomColor()));
+      }
+      page.setData({
+        doommData: doommList
+      })
+      sortTime.sort(function (x, y) {
+        return y - x;
+      }); 
+      //循环弹幕
+      setInterval(function(){
+        for (var i in msgList) {
+          sortTime.push(msgList[i]['showTime']);
+          doommList.push(new Doomm(msgList[i]['message'], Math.ceil(Math.random() * 100 - 20), msgList[i]['showTime'], getRandomColor()));
+        }
+        page.setData({
+          doommData: doommList
+        })
+      },sortTime[0]*1000-5000);
+    }
+  })
+}

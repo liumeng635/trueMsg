@@ -4,7 +4,7 @@
         <button class="{{_num == 1?'inTab':''}}" data-num = "1" bindtap='showMsgList'>全部</button>
         <button class="{{_num == 2?'inTab':''}}" data-num = "2" bindtap='showMsgList'>标记</button>
         <button class="{{_num == 3?'inTab':''}}" data-num = "3" bindtap='showMsgList'>查看</button>
-        <text class="desc">共有{{msgList.length}}位还有对你说了心里话哟~</text>
+        <text class="desc">共有{{chatNum}}位还有对你说了心里话哟~</text>
   </view>
 
   <scroll-view scroll-y="false" class='ul lstCont' wx:for="{{msgList}}" wx:key="id">
