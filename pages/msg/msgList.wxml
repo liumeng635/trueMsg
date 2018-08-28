@@ -2,24 +2,38 @@
 <view class="container">
  <view class='navTab' catchtouchmove="false">
         <button class="{{_num == 1?'inTab':''}}" data-num = "1" bindtap='showMsgList'>全部</button>
-        <button class="{{_num == 2?'inTab':''}}" data-num = "2" bindtap='showMsgList'>标记</button>
+        <button class="{{_num == 2?'inTab':''}}" data-num = "2" bindtap='showMsgList'>点赞</button>
         <button class="{{_num == 3?'inTab':''}}" data-num = "3" bindtap='showMsgList'>查看</button>
-        <text class="desc">共有{{chatNum}}位还有对你说了心里话哟~</text>
+        <text class="desc">{{chatShow}}</text>
   </view>
 
-  <scroll-view scroll-y="false" class='ul lstCont' wx:for="{{msgList}}" wx:key="id">
-    <view class='li'>
+  <scroll-view scroll-y="false" class='ul lstCont'>
+    <view class='li' wx:for="{{msgList}}" wx:key="id">
       <view class="inline" style='float:left;'>
-        <block wx:if="{{item.isView == 0 }}" class="inline">
-            <image class='avarHead' src='../img/head.png'/>
-        </block>
-        <block wx:else class="inline">
-            <image class='avarHead' src='{{item.fromAvatarUrl}}'/>
-        </block>
-        <text class="timeS">{{item.createTime}}</text>
+
+            <block wx:if="{{item.isView == 0 }}" class="inline">
+                <view class='inline'>
+                    <image class='avarHead' data-num="{{item.isView}}" data-text="{{item.whisperId}}"  bindtap='doLook' src='../img/head.png'/>
+                </view>
+                <view class='inline'>
+                    <text class="timeS">{{item.createTime}}</text>
+                </view>
+            </block>
+            <block wx:else class="inline">
+              <view class='inline'>
+                <image class='avarHead' src='{{item.fromAvatarUrl}}'/>
+              </view>
+              <view class='inline'>
+                <text class="block">{{item.nickName}}</text>
+                <text class="timeS block">{{item.createTime}}</text>
+              </view>
+            </block>
+
+        
       </view>
       <view class="inline" style='float:right;line-height:40px;'>
-        <text data-num="{{item.isLike}}" data-text="{{item.whisperId}}" bindtap='doLike'  class="iconfont {{item.isLike == 0 ? 'icon-buoumaotubiao15' : 'icon-buoumaotubiao16'}}"></text>
+        <text data-num="{{item.isLike}}" data-text="{{item.whisperId}}" bindtap='doLike'  class="iconfont {{item.isLike == 0 ? 'icon-buoumaotubiao15' : 'icon-buoumaotubiao16'}}"></text> 
+        <text class='ratio' wx-if="{{item.isLike>0}}">{{item.isLike}}</text>
         <text data-num="{{item.isView}}" data-text="{{item.whisperId}}" bindtap='doLook' class="iconfont {{item.isView == 0 ? 'icon-chakan':'icon-chakanyanjingshishifenxi2'}} "></text>
         <text class="iconfont icon-shanchu" data-text="{{item.whisperId}}" bindtap='deleteWhisper'></text>    
 
@@ -30,4 +44,46 @@
     </view>
   </scroll-view>
 
+</view>
+
+
+
+
+<!--弹窗-->
+<view class="modal-mask" bindtap="hideModal" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
+<view class="modal-dialog" wx:if="{{showModal}}">
+  <view class="modal-title">提示</view>
+  <view class="modal-content">
+    <view class="modal-input">
+      解锁该评论人需支付金额1元，请在阅读
+      <text class='modal-a' bindtap='showPayNote'>付款须知</text>
+      后继续付款
+    </view>
+    <view class="modal-input" style='padding-top:5px;'>
+      <checkbox style='zoom:70%;vertical-align:15%;' checked='{{false}}' />我已阅读并同意付款须知
+    </view>
+  </view>
+  <view class="modal-footer">
+    <view class="btn-cancel" bindtap="onCancel" data-status="cancel">取消</view>
+    <view class="btn-confirm" bindtap="onConfirm" data-status="confirm">继续付款</view>
+  </view>
+</view>
+
+
+
+<!--弹窗-->
+<view class="modal-mask" bindtap="hidePayModal" catchtouchmove="preventTouchMove" wx:if="{{showPayModal}}"></view>
+<view style='height:340px;top:37%;' class="modal-dialog" wx:if="{{showPayModal}}">
+  <view class="modal-title">付款须知</view>
+  <view class="modal-content">
+    <view class="modal-input">
+        <text class='modal-item'>1,此价格解锁所有留言的评论人</text>
+        <text class='modal-item'>2,解锁的内容为留言者在发表该评论时所使用的微信昵称和头像；</text>
+        <text class='modal-item'>3,因本商品性质特殊，除付款后没有正常显示评论人信息外，其他原因（如错付等）均不予以退款；</text>
+        <text class='modal-item'>4,满许退款条件且有退款意愿的用户，请通过留言管理页面的客服接口与客服人员联系。</text>
+    </view>
+  </view>
+  <view class="modal-footer">
+    <view class="btn-cancel" style='border-right:none;width:100%;' bindtap="onPayCancel" data-status="cancel">我知道了</view>
+  </view>
 </view>

@@ -1,14 +1,12 @@
-<!--index.wxml-->
 <view class="msc_left">
       <image src="../img/music.png" class="{{imageRotate}}" bindtap='onmusicTap' mode="scaleToFill"></image>
 </view>
 <view class="msc_right">
-      <!-- <button class="shareBtn" open-type="share">分享</button> -->
       <button class="shareBtn" bindtap='toShare'>分享</button>
 </view>
 <view class="container bottle" catchtouchmove='catchTouchMove'>
 <view class="userinfo" style='top:50px'>
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称</button>
     <block wx:else>
       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{avatarUrl}}" mode="cover"></image>
       <text class="userinfo-nickname">{{toNickName}}</text>
@@ -16,8 +14,8 @@
   </view>
     <view class="doommview">
         <block wx:for="{{doommData}}" wx:key="id">
-            <text wx:if="{{item.display}}" class="aon" style="animation: first {{item.time}}s linear forwards;top:{{item.top}}%;color:{{item.color}};">
-                <text style='font-size:25px;vertical-align:middle' class='iconfont icon-buoumaotubiao15' decode="{{true}}">&nbsp;</text>{{item.text}}
+            <text bindtap='doLike' data-index='{{item.id}}' data-num="{{isLikesArr[item.id%dataLength]}}" data-text="{{item.whisperId}}" wx:if="{{item.display}}" class="aon" style="animation: first {{item.time}}s linear forwards;top:{{item.top}}%;color:{{item.color}};">
+                <text style='font-size:25px;vertical-align:middle' class='iconfont {{itemClasses[item.id%dataLength]}}'></text><text style='font-size:10px' decode="{{true}}">{{isLikesArr[item.id%dataLength] == 0 ? "" : isLikesArr[item.id%dataLength]}}&nbsp;</text>{{item.text}}
             </text>
         </block>
     </view>
@@ -27,7 +25,6 @@
             <input placeholder-class="phcolor" class="txtInput" bindinput="whisperInput" type='text' value="{{whisper}}" placeholder='#说说你最想对他说的悄悄话#'/>
             <text decode="{{true}}">&nbsp;</text>
             <button class='subBtn'  bindtap='showWhisper'>发送</button>
-            <!-- <button  wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权登录</button> -->
         </block>
     </view>
 

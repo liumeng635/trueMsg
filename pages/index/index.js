@@ -18,7 +18,13 @@
       imageRotate:'image-rotate',
       doommData: [],
       whisper:'',
-      tagTxts:[]
+      tagTxts:[],
+      itemClasses:[],
+      dataLength:0,
+      msgColor:"#000033",//消息显示颜色,
+      meColor:"#CC0000",
+      msgList:[],
+      isLikesArr:[]
     },
     //事件处理函数
     bindViewTap: function() {
@@ -71,23 +77,7 @@
           page.setData({
             toUserId: toUserId
           })
-          wx.request({
-            //后台接口地址
-            url: context + 'user/getToUserInfo',
-            method: "POST",
-            data: {
-              toUserId: toUserId
-            },
-            header: {
-              'content-type': 'application/x-www-form-urlencoded'
-            },
-            success: function (res) {
-              page.setData({
-                avatarUrl: res.data.avatarUrl,
-                toNickName: res.data.data.nickName
-              })
-            }
-          })
+          setToAavatar(toUserId);
         } else {//倾述对象是自己
           this.setData({
             toUserId: app.globalData.userInfo.openid,
@@ -113,25 +103,8 @@
             var toUserId = options.query.toUserId;
             page.setData({
               toUserId: toUserId
-            })
-            wx.request({
-              //后台接口地址
-              url: context + 'user/getToUserInfo',
-              method: "POST",
-              data: {
-                toUserId:toUserId
-              },
-              header: {
-                'content-type': 'application/x-www-form-urlencoded'
-              },
-              success: function (res) {
-                page.setData({
-                  avatarUrl: res.data.data.avatarUrl,
-                  toNickName: res.data.data.nickName
-                })
-              }
-            })
-            
+            })  
+            setToAavatar(toUserId);
           } else {//倾述对象是自己
             page.setData({
               toUserId: this.data.userInfo.openid,
@@ -160,23 +133,7 @@
               page.setData({
                 toUserId: toUserId
               })
-              wx.request({
-                //后台接口地址
-                url: context + 'user/getToUserInfo',
-                method: "POST",
-                data: {
-                  toUserId: toUserId
-                },
-                header: {
-                  'content-type': 'application/x-www-form-urlencoded'
-                },
-                success: function (res) {
-                  page.setData({
-                    avatarUrl: res.data.data.avatarUrl,
-                    toNickName: res.data.data.nickName
-                  })
-                }
-              })
+              setToAavatar(toUserId);
             } else {//倾述对象是自己
               page.setData({
                 toUserId: res.userInfo.openid,
@@ -192,7 +149,8 @@
         // dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
         // dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
         // dataUrl: 'http://sc1.111ttt.cn/2015/1/08/05/101052215331.mp3'
-        dataUrl: 'http://www.ytmp3.cn/down/34981.mp3'
+        // dataUrl: 'http://www.ytmp3.cn/down/34981.mp3'
+        dataUrl:app.globalData.backUrl
       });
 
       setInterval(function () {//监听音乐循环播放
@@ -201,7 +159,8 @@
             // dataUrl: 'http://www.ytmp3.cn/down/47264.mp3'
             // dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
             // dataUrl: 'http://sc1.111ttt.cn/2015/1/08/05/101052215331.mp3'
-            dataUrl: 'http://www.ytmp3.cn/down/34981.mp3'
+            // dataUrl: 'http://www.ytmp3.cn/down/34981.mp3'
+            dataUrl: app.globalData.backUrl
           });
         })
       }, 500);
@@ -230,7 +189,8 @@
         wx.playBackgroundAudio({
           // dataUrl: 'http://www.ytmp3.cn/down/37395.mp3'
           // dataUrl: 'http://sc1.111ttt.cn/2015/1/08/05/101052215331.mp3'
-          dataUrl: 'http://www.ytmp3.cn/down/34981.mp3'
+          // dataUrl: 'http://www.ytmp3.cn/down/34981.mp3'
+          dataUrl: app.globalData.backUrl
         });
         this.setData({
           isPlayingMusic: true,
@@ -252,27 +212,45 @@
         whisper: e.currentTarget.dataset.text
       });
     },
-    showWhisper:function(e){//点击确定
+    showWhisper:function(e){//点击确定发送弹幕
       var whis = this.data.whisper;
       if (whis != ''){
-        //添加倾述信息记录 
-        wx.request({
-          //后台接口地址
-          url: context + 'msg/recordWhisper',
-          method: "POST",
-          data: {
-            message: whis,
-            fromOpenId:this.data.userInfo.openid,
-            toOpenId: this.data.toUserId,
-            showTime: Math.ceil(Math.random() * 10)
-          },
-          header: {
-            'content-type': 'application/x-www-form-urlencoded'
-          },
-          success: function (res) {
-            queryMyWhisperList(app.globalData.userInfo.openid);
-          }
-        })
+        this.setData({
+          whisper:""
+        });
+        //将信息显示列表
+        // var top = tops[page.data.dataLength-1] + baseHeight;
+        // dommList.push(new Doomm(whis, top, Math.ceil(Math.random() * 10), page.data.meColor, '-1', 0));
+        clearInterval(intIndex);
+        //添加倾述信息记录
+        try{
+          wx.request({
+            //后台接口地址
+            url: context + 'msg/recordWhisper',
+            method: "POST",
+            data: {
+              message: whis,
+              fromOpenId: this.data.userInfo.openid,
+              toOpenId: this.data.toUserId,
+              showTime: Math.ceil(Math.random() * 10)
+            },
+            header: {
+              'content-type': 'application/x-www-form-urlencoded'
+            },
+            success: function (res) {
+              setTimeout(function () {
+                queryMyWhisperListForLike(app.globalData.userInfo.openid);
+              }, sortTime[0] * 1000);
+            },fail:function(){
+              wx.showToast({
+                title: '后台服务出错!',
+                "icon": "none"
+              })
+            }
+          })
+        }catch(e){
+          console.log(e);
+        }
       }
     },
     whisperInput:function(e){//监听留言输入
@@ -303,6 +281,42 @@
     },
     bindGetUserInfo: function (e) {
       console.log(e.detail.userInfo)
+    },
+    doLike: function (e) {//点赞/取消点赞
+      var whisperId = e.currentTarget.dataset.text;
+      var isLike = e.currentTarget.dataset.num;
+      var dataId = e.currentTarget.dataset.index;
+      var dataLength = page.data.dataLength;
+      if(isLike == 0){
+        itemClassesD[dataId % dataLength]="icon-buoumaotubiao16";
+        isLikes[dataId % dataLength] = isLikes[dataId % dataLength] +1;
+      }else{
+        itemClassesD[dataId % dataLength] = "icon-buoumaotubiao15";
+        isLikes[dataId % dataLength] = isLikes[dataId % dataLength] - 1;
+      }
+      page.setData({
+        itemClasses: itemClassesD,
+        isLikesArr: isLikes
+      });
+      wx.request({
+        //后台接口地址
+        url: context + 'like/doLike',
+        method: "POST",
+        data: {
+          "whisperId": whisperId,
+          "isLike": isLike,
+          "likeOpenId": app.globalData.userInfo.openid
+        },
+        header: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        success: function (res) {
+          clearInterval(intIndex);
+          setTimeout(function(){
+            queryMyWhisperListForLike(app.globalData.userInfo.openid);
+          },sortTime[0]*1000);
+        }
+      })
     }
   })
 
@@ -310,7 +324,7 @@
   var doommList = [];
   var i = 0;//用做唯一的wx:key
 class Doomm {
-  constructor(text, top, time, color) {
+  constructor(text, top, time, color,whisperId,isLike) {
     if (time < 5) {
       time = 5;
     }
@@ -319,14 +333,16 @@ class Doomm {
     this.time = time;
     this.color = color;
     this.display = true;
+    this.whisperId = whisperId;
+    this.isLike = isLike;
     let that = this;
     this.id = i++;
-    // setTimeout(function () {
-    //   //doommList.splice(doommList.indexOf(that), 1);//动画完成，从列表中移除这项
-    //   page.setData({
-    //     doommData: doommList
-    //   })
-    // }, this.time * 1000)//定时器动画完成后执行。
+    setTimeout(function () {
+      doommList.splice(doommList.indexOf(that), 1);//动画完成，从列表中移除这项
+      page.setData({
+        doommData: doommList
+      })
+    }, this.time * 1000)//定时器动画完成后执行。
   }
 }
   function getRandomColor() {
@@ -342,41 +358,178 @@ class Doomm {
 /**
  * 查看倾述留言列表
  */
+var intIndex;
+var dommList = [];
+var tops = [];
+var baseHeight = 12;
+var sortTime = [];
+var itemClassesD = [];
+var isLikes = [];
 function queryMyWhisperList(toOpenid) {
-  wx.request({
-    //后台接口地址
-    url: context + 'msg/queryMyWhisperList',
-    method: "POST",
-    data: {
-      "toOpenId": toOpenid,
-      "type": 0
-    },
-    header: {
-      'content-type': 'application/x-www-form-urlencoded'
-    },
-    success: function (res) {
-      var msgList = res.data.data;
-      var sortTime = [];
-      for (var i in msgList) {
-          sortTime.push(msgList[i]['showTime']);
-          doommList.push(new Doomm(msgList[i]['message'], Math.ceil(Math.random() * 100 - 20),msgList[i]['showTime'], getRandomColor()));
-      }
-      page.setData({
-        doommData: doommList
-      })
-      sortTime.sort(function (x, y) {
-        return y - x;
-      }); 
-      //循环弹幕
-      setInterval(function(){
+  if (intIndex) { clearInterval(intIndex);}
+  try{
+    wx.request({
+      //后台接口地址
+      url: context + 'msg/queryMyWhisperList',
+      method: "POST",
+      data: {
+        "toOpenId": toOpenid,
+        "type": 0
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      success: function (res) {
+        page.setData({
+          msgList:res.data.data
+        });
+        var msgList = page.data.msgList;
+        
+        //生成一组top值保证弹幕不被遮挡
+        page.setData({
+          dataLength: msgList.length
+        });
+        for(var i=1;i<=msgList.length;i++){
+          tops.push(baseHeight * (i-1));
+        }
+        
         for (var i in msgList) {
+          var isLike = msgList[i]['isLike'];
+          isLikes.push(isLike);
+          if (isLike == 0){
+            itemClassesD.push("icon-buoumaotubiao15");
+          }else{
+            itemClassesD.push("icon-buoumaotubiao16");
+          }
+          //
           sortTime.push(msgList[i]['showTime']);
-          doommList.push(new Doomm(msgList[i]['message'], Math.ceil(Math.random() * 100 - 20), msgList[i]['showTime'], getRandomColor()));
+          dommList.push(new Doomm(msgList[i]['message'], tops[i], msgList[i]['showTime'], page.data.msgColor, msgList[i]['whisperId'], msgList[i]['isLike']));
         }
         page.setData({
-          doommData: doommList
+          doommData: dommList,
+          itemClasses: itemClassesD,
+          isLikesArr: isLikes
         })
-      },sortTime[0]*1000-5000);
+        sortTime.sort(function (x, y) {
+          return y - x;
+        });
+        setIntervelShow();
+      },fail:function(){
+        wx.showToast({
+          title: '后台服务出错!',
+          "icon": "none"
+        })
+      }
+    })
+  }catch(e){
+    console.log(e);
+  }
+}
+
+
+function setIntervelShow(){
+  //循环弹幕
+  intIndex = setInterval(function () {
+    for (var i in dommList) {
+      doommList.push(dommList[i]);
     }
-  })
+    page.setData({
+      doommData: doommList,
+      itemClasses: itemClassesD,
+      isLikesArr: isLikes
+    });
+  }, sortTime[0] * 1000);
+}
+
+
+
+function queryMyWhisperListForLike(toOpenid) {
+  try {
+    wx.request({
+      //后台接口地址
+      url: context + 'msg/queryMyWhisperList',
+      method: "POST",
+      data: {
+        "toOpenId": toOpenid,
+        "type": 0
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      success: function (res) {
+        page.setData({
+          msgList: res.data.data
+        });
+        var msgList = page.data.msgList;
+        //生成一组top值保证弹幕不被遮挡
+        page.setData({
+          dataLength: msgList.length
+        });
+        tops = [];
+        itemClassesD = [];
+        dommList = [];
+        sortTime = [];
+        isLikes = [];
+        for (var i = 1; i <= msgList.length; i++) {
+          tops.push(baseHeight * (i - 1));
+        }
+        for (var i in msgList) {
+          var isLike = msgList[i]['isLike'];
+          isLikes.push(isLike);
+          if (isLike == 0 || isLike == "undefined") {
+            itemClassesD.push("icon-buoumaotubiao15");
+          } else {
+            itemClassesD.push("icon-buoumaotubiao16");
+          }
+          //
+          sortTime.push(msgList[i]['showTime']);
+          dommList.push(new Doomm(msgList[i]['message'], tops[i], msgList[i]['showTime'], page.data.msgColor, msgList[i]['whisperId'], msgList[i]['isLike']));
+        }
+        sortTime.sort(function (x, y) {
+          return y - x;
+        });
+        setIntervelShow();
+      }, fail: function () {
+        wx.showToast({
+          title: '后台服务出错!',
+          "icon": "none"
+        })
+      }
+    })
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+
+
+
+/**
+ * 设置昵称和头像
+ */
+function setToAavatar(toUserId){
+    wx.request({
+      //后台接口地址
+      url: context + 'user/getToUserInfo',
+      method: "POST",
+      data: {
+        toUserId: toUserId
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      success: function (res) {
+        page.setData({
+          avatarUrl: res.data.data.avatarUrl,
+          toNickName: res.data.data.nickName
+        })
+      }, 
+      fail: function () {//失败
+          wx.showToast({
+            title: '后台服务出错!',
+            "icon":"none"
+          })
+      }
+    })
+    
 }
